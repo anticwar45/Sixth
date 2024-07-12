@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bcf6eaf1-59c5-45da-9c02-a4d3021e53b7" name="Changes" comment="add project files">
+    <list default="true" id="bcf6eaf1-59c5-45da-9c02-a4d3021e53b7" name="Changes" comment="add ApiTests.java">
       <change afterPath="$PROJECT_DIR$/src/test/java/Rerqres/ApiTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +47,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.ApiTests.createTest.executor": "Run",
     "JUnit.ApiTests.deleteTest.executor": "Run",
+    "JUnit.ApiTests.executor": "Run",
     "JUnit.ApiTests.getSingleResource.executor": "Run",
     "JUnit.ApiTests.patchUpdateTest.executor": "Run",
     "JUnit.ApiTests.successfulLoginTest.executor": "Run",
@@ -70,7 +71,7 @@
       <recent name="C:\Users\Сергей\IdeaProjects\Sixth" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ApiTests">
+  <component name="RunManager" selected="JUnit.ApiTests.deleteTest">
     <configuration name="ApiTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Sixth" />
       <extension name="coverage">
@@ -102,7 +103,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ApiTests.patchUpdateTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ApiTests.deleteTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Sixth" />
       <extension name="coverage">
         <pattern>
@@ -112,7 +113,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="Rerqres" />
       <option name="MAIN_CLASS_NAME" value="Rerqres.ApiTests" />
-      <option name="METHOD_NAME" value="patchUpdateTest" />
+      <option name="METHOD_NAME" value="deleteTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -152,11 +153,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ApiTests.deleteTest" />
         <item itemvalue="JUnit.ApiTests" />
         <item itemvalue="JUnit.ApiTests.createTest" />
         <item itemvalue="JUnit.ApiTests.successfulRegisterTest" />
         <item itemvalue="JUnit.ApiTests.unsuccessfulRegisterTest" />
-        <item itemvalue="JUnit.ApiTests.patchUpdateTest" />
       </list>
     </recent_temporary>
   </component>
@@ -177,11 +178,20 @@
       <option name="project" value="LOCAL" />
       <updated>1720757733025</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="add project files">
+      <option name="closed" value="true" />
+      <created>1720803486326</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1720803486326</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add project files" />
-    <option name="LAST_COMMIT_MESSAGE" value="add project files" />
+    <MESSAGE value="add ApiTests.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="add ApiTests.java" />
   </component>
 </project>
