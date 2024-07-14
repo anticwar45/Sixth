@@ -2,7 +2,7 @@ package Rerqres;
 
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
-import io.restassured.response.ValidatableResponse;
+import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,17 +14,19 @@ public class ApiTests {
 
     @Test
     public void singleResourceTest() {
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
-                .get("https://reqres.in/api/unknown/5")
-                .jsonPath();
+                .get("https://reqres.in/api/unknown/5");
+
+        JsonPath jsonResponse = response.jsonPath();
 
         softAssert = new SoftAssertions();
-        softAssert.assertThat(Integer.parseInt(response.get("data.id").toString())).isEqualTo(5);
-        softAssert.assertThat(response.get("data.name").toString()).isEqualTo("tigerlily");
-        softAssert.assertThat(response.get("data.year").toString()).isEqualTo("2004");
+        softAssert.assertThat(response.statusCode()).isEqualTo(200);
+        softAssert.assertThat(Integer.parseInt(jsonResponse.get("data.id").toString())).isEqualTo(5);
+        softAssert.assertThat(jsonResponse.get("data.name").toString()).isEqualTo("tigerlily");
+        softAssert.assertThat(jsonResponse.get("data.year").toString()).isEqualTo("2004");
         softAssert.assertAll();
-        response.prettyPrint();
+        jsonResponse.prettyPrint();
     }
 
     @Test
@@ -33,18 +35,20 @@ public class ApiTests {
         Map<String, String> body = new HashMap<>();
         body.put("email", "eve.holt@reqres.in");
         body.put("password", "cityslicka");
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
                 .contentType("application/json")
                 .body(body)
                 .when()
                 .post("https://reqres.in/api/login")
-                .jsonPath();
+                .andReturn();
 
+        JsonPath jsonResponse = response.jsonPath();
         softAssert = new SoftAssertions();
-        softAssert.assertThat(response.get("token").toString()).isNotEmpty();
+        softAssert.assertThat(response.statusCode()).isEqualTo(200);
+        softAssert.assertThat(jsonResponse.get("token").toString()).isNotEmpty();
         softAssert.assertAll();
-        response.prettyPrint();
+        jsonResponse.prettyPrint();
     }
 
     @Test
@@ -52,68 +56,75 @@ public class ApiTests {
         Map<String, String> body = new HashMap<>();
         body.put("name", "morpheus");
         body.put("job", "zion resident");
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
                 .contentType("application/json")
                 .body(body)
                 .when()
                 .put("https://reqres.in/api/users/3")
-                .jsonPath();
+                .andReturn();
 
+        JsonPath jsonResponse = response.jsonPath();
         softAssert = new SoftAssertions();
-        softAssert.assertThat(response.get("name").toString()).isEqualTo(body.get("name"));
-        softAssert.assertThat(response.get("job").toString()).isEqualTo(body.get("job"));
-        softAssert.assertThat(response.get("updatedAt").toString()).isNotEmpty();
+        softAssert.assertThat(response.statusCode()).isEqualTo(200);
+        softAssert.assertThat(jsonResponse.get("name").toString()).isEqualTo(body.get("name"));
+        softAssert.assertThat(jsonResponse.get("job").toString()).isEqualTo(body.get("job"));
+        softAssert.assertThat(jsonResponse.get("updatedAt").toString()).isNotEmpty();
         softAssert.assertAll();
-        response.prettyPrint();
+        jsonResponse.prettyPrint();
     }
 
     @Test
     public void deleteTest() {
-        ValidatableResponse response = RestAssured
+        Response response = RestAssured
                 .given()
                 .when()
-                .delete("https://reqres.in/api/users/65")
-                .then()
-                .statusCode(204);
+                .delete("https://reqres.in/api/users/65");
+        softAssert = new SoftAssertions();
+        softAssert.assertThat(response.statusCode()).isEqualTo(204);
+        softAssert.assertAll();
     }
 
     @Test
     public void patchUpdateTest() {
         Map<String, String> body = new HashMap<>();
         body.put("name", "morpheus");
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
                 .contentType("application/json")
                 .body(body)
                 .when()
                 .patch("https://reqres.in/api/users/35")
-                .jsonPath();
+                .andReturn();
 
+        JsonPath jsonResponse = response.jsonPath();
         softAssert = new SoftAssertions();
-        softAssert.assertThat(response.get("name").toString()).isEqualTo(body.get("name"));
-        softAssert.assertThat(response.get("updatedAt").toString()).isNotEmpty();
+        softAssert.assertThat(response.statusCode()).isEqualTo(200);
+        softAssert.assertThat(jsonResponse.get("name").toString()).isEqualTo(body.get("name"));
+        softAssert.assertThat(jsonResponse.get("updatedAt").toString()).isNotEmpty();
         softAssert.assertAll();
-        response.prettyPrint();
+        jsonResponse.prettyPrint();
     }
 
     @Test
     public void unsuccessfulRegisterTest() {
         Map<String, String> body = new HashMap<>();
         body.put("password", "sydneyfife");
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
                 .contentType("application/json")
                 .body(body)
                 .when()
                 .post("https://reqres.in/api/register")
-                .jsonPath();
+                .andReturn();
 
+        JsonPath jsonResponse = response.jsonPath();
         softAssert = new SoftAssertions();
+        softAssert.assertThat(response.statusCode()).isEqualTo(400);
         String errorMessageNoEmailOrUsername = "Missing email or username";
         String errorMessageNoPassword = "Missing password";
 
-        softAssert.assertThat(response.get("error").toString()).isEqualTo(errorMessageNoEmailOrUsername);
+        softAssert.assertThat(jsonResponse.get("error").toString()).isEqualTo(errorMessageNoEmailOrUsername);
         response.prettyPrint();
 
         body.clear();
@@ -124,9 +135,12 @@ public class ApiTests {
                 .body(body)
                 .when()
                 .post("https://reqres.in/api/register")
-                .jsonPath();
-        softAssert.assertThat(response.get("error").toString()).isEqualTo(errorMessageNoPassword);
-        response.prettyPrint();
+                .andReturn();
+
+        jsonResponse = response.jsonPath();
+        softAssert.assertThat(response.statusCode()).isEqualTo(400);
+        softAssert.assertThat(jsonResponse.get("error").toString()).isEqualTo(errorMessageNoPassword);
+        jsonResponse.prettyPrint();
         softAssert.assertAll();
     }
 
@@ -135,18 +149,20 @@ public class ApiTests {
         Map<String, String> body = new HashMap<>();
         body.put("email", "eve.holt@reqres.in");
         body.put("password", "pistol");
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
                 .contentType("application/json")
                 .body(body)
                 .when()
                 .post("https://reqres.in/api/register")
-                .jsonPath();
+                .andReturn();
 
+        JsonPath jsonResponse = response.jsonPath();
         softAssert = new SoftAssertions();
-        softAssert.assertThat(response.get("id").toString()).isNotEmpty();
-        softAssert.assertThat(response.get("token").toString()).isNotEmpty();
-        response.prettyPrint();
+        softAssert.assertThat(response.statusCode()).isEqualTo(200);
+        softAssert.assertThat(jsonResponse.get("id").toString()).isNotEmpty();
+        softAssert.assertThat(jsonResponse.get("token").toString()).isNotEmpty();
+        jsonResponse.prettyPrint();
         softAssert.assertAll();
     }
 
@@ -155,20 +171,22 @@ public class ApiTests {
         Map<String, String> body = new HashMap<>();
         body.put("name", "morpheus");
         body.put("job", "leader");
-        JsonPath response = RestAssured
+        Response response = RestAssured
                 .given()
                 .contentType("application/json")
                 .body(body)
                 .when()
                 .post("https://reqres.in/api/users")
-                .jsonPath();
+                .andReturn();
 
+        JsonPath jsonResponse = response.jsonPath();
         softAssert = new SoftAssertions();
-        softAssert.assertThat(response.get("name").toString()).isEqualTo(body.get("name"));
-        softAssert.assertThat(response.get("job").toString()).isEqualTo(body.get("job"));
-        softAssert.assertThat(response.get("id").toString()).isNotEmpty();
-        softAssert.assertThat(response.get("createdAt").toString()).isNotEmpty();
-        response.prettyPrint();
+        softAssert.assertThat(response.statusCode()).isEqualTo(201);
+        softAssert.assertThat(jsonResponse.get("name").toString()).isEqualTo(body.get("name"));
+        softAssert.assertThat(jsonResponse.get("job").toString()).isEqualTo(body.get("job"));
+        softAssert.assertThat(jsonResponse.get("id").toString()).isNotEmpty();
+        softAssert.assertThat(jsonResponse.get("createdAt").toString()).isNotEmpty();
+        jsonResponse.prettyPrint();
         softAssert.assertAll();
     }
 }
